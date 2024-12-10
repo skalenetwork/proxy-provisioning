@@ -17,8 +17,13 @@
     - { src: "fullchain.pem", dest: "server.crt" }
     - { src: "privkey.pem", dest: "server.key" }
 
+- name: Build containers
+  command: "docker compose build skale-proxy metrics"
+  args:
+    chdir: "{{ base_path }}/skale-proxy"
+
 - name: Update containers
-  command: "docker compose pull"
+  command: "docker compose pull nginx db"
   args:
     chdir: "{{ base_path }}/skale-proxy"
 
