@@ -18,7 +18,7 @@
     - { src: "privkey.pem", dest: "server.key" }
 
 - name: Update containers
-  command: "docker-compose pull"
+  command: "docker compose pull"
   args:
     chdir: "{{ base_path }}/skale-proxy"
 
