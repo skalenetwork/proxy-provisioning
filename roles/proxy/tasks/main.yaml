@@ -33,5 +33,6 @@
     MYSQL_USER: "{{ mysql_user }}"
     MYSQL_PASSWORD: "{{ mysql_password }}"
     MYSQL_ROOT_PASSWORD: "{{ mysql_root_password }}"
+    USE_ELB: "{{ use_elb }}"
   args:
     chdir: "{{ base_path }}/skale-proxy"
