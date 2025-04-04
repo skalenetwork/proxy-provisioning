@@ -36,40 +36,27 @@
     "virtualenv",
     "python3-setuptools",
     "python3-dev",
-    "iptables-persistent"
+    "iptables-persistent",
+    "systemd-timesyncd"
     ]
   tags: apt
-
-- name: Update pip
-  pip:
-    name: pip
-    state: latest
 
 - import_tasks: docker.yaml
   tags: docker
 
 - name: Install docker.py
   pip:
-    name: docker==4.2.0
-  tags: pip
-
-- name: Install docker-compose
-  pip:
-    name: docker-compose==1.27.4
+    name: docker==7.1.0
+    extra_args: --break-system-packages
   tags: pip
 
 - name: Upgrade pyOpenSSL
   pip:
     name: pyOpenSSL
-    extra_args: "--upgrade"
+    extra_args: "--upgrade --break-system-packages"
   tags:
     - pip
     - openssl
-
-- name: Install docker-compose
-  pip:
-    name: docker-compose==1.27.4
-  tags: pip
 
 - name: Enable timedatectl
   shell: sudo timedatectl set-ntp on
