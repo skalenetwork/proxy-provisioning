@@ -1,5 +1,4 @@
-ansible==4.2.0
-skale.py==5.1dev5
+ansible==11.3.0
+skale.py==6.4b1
 boto3==1.17.34
-eth-account==0.5.3
 python-digitalocean==1.17.0
