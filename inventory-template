@@ -15,11 +15,11 @@ eth_endpoint='' # Ethereum Mainnet endpoint
 
 cert_mode=  # 'certbot' - generate using certbot / custom - upload your own
 
-# Environment variable that determines if proxy is deployed behind AWS ELB.
+# Environment variable that determines if proxy is deployed behind AWS ALB.
 # When set to true, configures Nginx to use X-Forwarded-For header for client IP.
-# Set to true if deploying behind Elastic Load Balancer to ensure correct rate limiting.
+# Set to true if deploying behind Application Load Balancer to ensure correct rate limiting.
 # Defaults to false for direct proxy deployments.
-use_elb=
+use_alb=
 
 do_token= # optional - DigitalOcean token (for 'certbot' cert_mode)
 email= # optional - SSL cert email (for 'certbot' cert_mode)
