@@ -1,7 +1,3 @@
-- name: Define nginx reload hook file
-  set_fact:
-    nginx_reload_hook: "/etc/letsencrypt/renewal-hooks/deploy/reload_nginx"
-
 - name: Setup hook to reload nginx container
   copy:
     content: |
@@ -9,6 +5,6 @@
       set -e
       cp /etc/letsencrypt/live/{{ domain }}/fullchain.pem {{ base_path }}/skale-proxy/data/server.crt && \
       cp /etc/letsencrypt/live/{{ domain }}/privkey.pem {{ base_path }}/skale-proxy/data/server.key && \
-      docker exec {{ nginx_container | default('proxy_nginx') }} nginx -s reload
-    dest: "{{ nginx_reload_hook }}"
+      docker compose --project-directory {{ base_path }}/skale-proxy exec -T nginx nginx -s reload
+    dest: /etc/letsencrypt/renewal-hooks/deploy/reload_nginx
     mode: "0750"

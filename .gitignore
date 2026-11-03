@@ -1,23 +1,5 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
-
-# Provision
-
-files/abi.json
-inventory
-inventory/
-files
-
-ansible.cfg
-
-files/ssl/*
-inventory/dev
-inventory/hosts
-
-_network_files/
-
+.venv/
 .DS_Store
-
-venv/
+ansible.cfg
+inventory
+files/

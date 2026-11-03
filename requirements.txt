@@ -1,4 +1,1 @@
-ansible==11.3.0
-skale.py==6.4b1
-boto3==1.17.34
-python-digitalocean==1.17.0
+ansible==14.5.0

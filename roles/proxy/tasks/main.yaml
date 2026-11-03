@@ -1,43 +1,27 @@
-- name: Create ABIs dir
-  file:
-    path: "{{ base_path }}/skale-proxy/abi"
-    state: directory
-
-- name: Copy ABIs to proxy
-  copy:
-    src: "files/abi.json"
-    dest: "{{ base_path }}/skale-proxy/data/abi.json"
-
 - name: Copy SSL certificate file (proxy)
   copy:
     src: "{{ base_path }}/ssl/{{ inventory_hostname }}/{{ item.src }}"
     dest: "{{ base_path }}/skale-proxy/data/{{ item.dest }}"
     remote_src: true
+    mode: "0600"
   loop:
     - { src: "fullchain.pem", dest: "server.crt" }
     - { src: "privkey.pem", dest: "server.key" }
 
-- name: Build containers
-  command: "docker compose build skale-proxy metrics"
-  args:
-    chdir: "{{ base_path }}/skale-proxy"
-
-- name: Update containers
-  command: "docker compose pull nginx db"
-  args:
-    chdir: "{{ base_path }}/skale-proxy"
+- name: Write proxy environment
+  copy:
+    content: |
+      ENDPOINT={{ eth_endpoint }}
+      ETH_ENDPOINT={{ eth_endpoint }}
+      MANAGER_CONTRACTS={{ manager_contracts }}
+      NETWORK_NAME={{ network_name }}
+      HEARTBEAT_URL={{ heartbeat_url | default('') }}
+      USE_ALB={{ use_alb | bool }}
+      COMPOSE_PROFILES=metrics
+    dest: "{{ base_path }}/skale-proxy/.env"
+    mode: "0600"
 
 - name: Run proxy
-  command: "bash scripts/run_proxy.sh"
-  environment:
-    ETH_ENDPOINT: "{{ eth_endpoint }}"
-    FIRST_SCHAIN_ID: "{{ groups['proxy'].index(inventory_hostname) * 100 }}"
-    LAST_SCHAIN_ID: "{{ ( groups['proxy'].index(inventory_hostname) + 1) * 100 }}"
-    NETWORK_NAME: "{{ network_name }}"
-    HEARTBEAT_URL: "{{ heartbeat_url }}"
-    MYSQL_USER: "{{ mysql_user }}"
-    MYSQL_PASSWORD: "{{ mysql_password }}"
-    MYSQL_ROOT_PASSWORD: "{{ mysql_root_password }}"
-    USE_ALB: "{{ use_alb }}"
+  command: docker compose up -d --build --remove-orphans --force-recreate
   args:
     chdir: "{{ base_path }}/skale-proxy"
