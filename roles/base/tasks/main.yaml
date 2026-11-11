@@ -3,9 +3,6 @@
     src: "files/authorized_keys"
     dest: "{{ base_path }}/.ssh"
 
-- name: Install aptitude
-  apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
-
 - name: Set soft ulimits
   pam_limits:
     domain: root
@@ -22,50 +19,22 @@
     value: "1000000000"
   tags: ulimits
 
-- name: Install aptitude
-  apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
-
 - name: Install packages
-  apt: name={{ item }} update_cache=yes state=latest
-  loop: [
-    "apt-transport-https",
-    "ca-certificates",
-    "curl",
-    "software-properties-common",
-    "python3-pip",
-    "virtualenv",
-    "python3-setuptools",
-    "python3-dev",
-    "iptables-persistent",
-    "systemd-timesyncd"
-    ]
+  apt:
+    name:
+      - ca-certificates
+      - iptables-persistent
+      - systemd-timesyncd
+    state: latest
+    update_cache: true
   tags: apt
 
 - import_tasks: docker.yaml
   tags: docker
 
-- name: Install docker.py
-  pip:
-    name: docker==7.1.0
-    extra_args: --break-system-packages
-  tags: pip
-
-- name: Upgrade pyOpenSSL
-  pip:
-    name: pyOpenSSL
-    extra_args: "--upgrade --break-system-packages"
-  tags:
-    - pip
-    - openssl
-
-- name: Enable timedatectl
-  shell: sudo timedatectl set-ntp on
-  become: true
-  tags: ntp
-
 - name: Enable timesyncd service
   systemd:
     name: systemd-timesyncd
+    enabled: true
     state: started
-  become: true
   tags: ntp

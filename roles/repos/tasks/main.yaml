@@ -18,8 +18,3 @@
     track_submodules: yes
     force: yes
     version: develop
-
-- name: Copy ABIs
-  copy:
-    src: "files/abi.json"
-    dest: "{{ base_path }}"
